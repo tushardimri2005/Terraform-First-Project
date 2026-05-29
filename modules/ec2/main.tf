@@ -6,3 +6,4 @@ resource "aws_instance" "ec2_instance" {
     Name = "Terraform-EC2"
   }
 }
+#This is ec2 file
