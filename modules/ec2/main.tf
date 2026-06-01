@@ -8,3 +8,4 @@ resource "aws_instance" "ec2_instance" {
 }
 #This is ec2 file
 #this is the amazon linux 2 configuration
+#testing
