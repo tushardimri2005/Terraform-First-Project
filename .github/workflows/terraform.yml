@@ -38,7 +38,8 @@ jobs:
   terraform-apply:
     needs: terraform-plan
     runs-on: ubuntu-latest
-    environment: production
+    environment: production 
+    #This is the main point where manual approval works trigger
 
     steps:
 
