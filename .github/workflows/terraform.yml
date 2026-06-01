@@ -40,6 +40,8 @@ jobs:
     runs-on: ubuntu-latest
     environment: production 
     #This is the main point where manual approval works trigger
+    #For testing purposes 
+    
 
     steps:
 
