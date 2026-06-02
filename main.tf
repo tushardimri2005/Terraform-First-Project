@@ -33,3 +33,6 @@ module "ec2" {
 module "s3" {
   source = "./modules/s3"
 }
+module "security_group" {
+  source = "./modules/security-group"
+}
