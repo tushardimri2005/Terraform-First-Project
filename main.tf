@@ -24,8 +24,12 @@ module "iam" {
 
 module "ec2" {
   source = "./modules/ec2"
-}
 
+  security_group_id = module.security_group.sg_id
+
+  index_html = file("${path.root}/website/index.html")
+  style_css  = file("${path.root}/website/style.css")
+}
 module "s3" {
   source = "./modules/s3"
 }
