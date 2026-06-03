@@ -5,4 +5,3 @@ resource "aws_vpc" "main_vpc" {
     Name = "Terraform-VPC"
   }
 }
-#this is the vpc file

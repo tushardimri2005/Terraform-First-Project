@@ -27,3 +27,27 @@ resource "aws_iam_user_group_membership" "group_membership" {
     aws_iam_group.devops_group.name
   ]
 }
+##IAM Role
+resource "aws_iam_role" "terraform_role" {
+  name = "terraform-role"
+
+  assume_role_policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [{
+      Effect = "Allow"
+
+      Principal = {
+        Service = "ec2.amazonaws.com"
+      }
+
+      Action = "sts:AssumeRole"
+    }]
+  })
+}
+
+# Attach Policy to Role
+
+resource "aws_iam_role_policy_attachment" "role_policy_attach" {
+  role       = aws_iam_role.terraform_role.name
+  policy_arn = aws_iam_policy.custom_policy.arn
+}
