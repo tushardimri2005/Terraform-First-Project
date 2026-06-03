@@ -5,4 +5,5 @@ resource "aws_instance" "ec2_instance" {
   tags = {
     Name = "Terraform-EC2"
   }
-}
+} 
+#this is the ec2 instance file
