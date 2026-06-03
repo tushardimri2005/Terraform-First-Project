@@ -10,3 +10,8 @@ resource "aws_route_table" "public_rt" {
     Name = "Terraform-RouteTable"
   }
 }
+
+resource "aws_route_table_association" "public_assoc" {
+  subnet_id      = var.public_subnet_id
+  route_table_id = aws_route_table.public_rt.id
+}

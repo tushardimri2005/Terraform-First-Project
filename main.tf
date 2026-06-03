@@ -13,9 +13,10 @@ module "internet_gateway" {
 }
 
 module "route_table" {
-  source     = "./modules/route-table"
-  vpc_id     = module.vpc.vpc_id
-  gateway_id = module.internet_gateway.igw_id
+  source           = "./modules/route-table"
+  vpc_id           = module.vpc.vpc_id
+  gateway_id       = module.internet_gateway.igw_id
+  public_subnet_id = module.subnet.public_subnet_id
 }
 
 module "iam" {
