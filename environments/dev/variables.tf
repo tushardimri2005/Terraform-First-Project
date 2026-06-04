@@ -23,3 +23,6 @@ variable "availability_zone" {
 variable "aws_region" {
   type = string
 }
+variable "key_name" {
+  type = string
+}

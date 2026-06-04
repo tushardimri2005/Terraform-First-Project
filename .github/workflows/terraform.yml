@@ -11,8 +11,7 @@ jobs:
   terraform-plan:
     runs-on: ubuntu-latest
 
-    env:
-      TF_VAR_aws_region: ${{ github.event.inputs.aws_region }}
+    
 
     steps:
       - name: Checkout Code

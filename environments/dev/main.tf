@@ -15,6 +15,8 @@ module "ec2" {
   ami           = var.ami
   instance_type = var.instance_type
   subnet_id     = module.vpc.private_subnet_id
+  security_group_id = module.vpc.default_security_id
+  key_name = var.key_name
 
   depends_on = [module.vpc]
 }
