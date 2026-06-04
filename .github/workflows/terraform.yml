@@ -6,20 +6,7 @@ on:
       - main
       - approval-pipeline
 
-    workflow_dispatch:
-     inputs:
-      action:
-        description: "Select Action"
-        required: true
-        default: "apply"
-        type: choice
-        options:
-          - apply
-          - destroy
-
-      aws_region:
-       description: "AWS Region"
-       required: true
+    
 jobs:
   terraform-plan:
     runs-on: ubuntu-latest
@@ -57,7 +44,7 @@ jobs:
         run: terraform plan
 
   terraform-apply:
-    if: github.event_name == 'push' || github.event.inputs.action == 'apply'
+    if: github.event_name == 'push' 
     needs: terraform-plan
     runs-on: ubuntu-latest
     environment: production
@@ -84,29 +71,4 @@ jobs:
         working-directory: environments/dev
         run: terraform apply -auto-approve
 
-  terraform-destroy:
-    if: github.event_name == 'workflow_dispatch' && github.event.inputs.action == 'destroy'
-    runs-on: ubuntu-latest
-    environment: production
-
-    steps:
-      - name: Checkout Code
-        uses: actions/checkout@v4
-
-      - name: Setup Terraform
-        uses: hashicorp/setup-terraform@v3
-
-      - name: Configure AWS Credentials
-        uses: aws-actions/configure-aws-credentials@v4
-        with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: us-east-1
-
-      - name: Terraform Init
-        working-directory: environments/dev
-        run: terraform init
-
-      - name: Terraform Destroy
-        working-directory: environments/dev
-        run: terraform destroy -auto-approve
+  
