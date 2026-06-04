@@ -35,15 +35,18 @@ jobs:
           aws-region: us-east-1
 
       - name: Terraform Init
+        working-directory: environments/dev
         run: terraform init
 
       - name: Terraform Format Check
         run: terraform fmt -check -recursive
 
       - name: Terraform Validate
+        working-directory: environments/dev
         run: terraform validate
 
       - name: Terraform Plan
+        working-directory: environments/dev
         run: terraform plan
 
   terraform-apply:
@@ -67,6 +70,7 @@ jobs:
           aws-region: us-east-1
 
       - name: Terraform Init
+        working-directory: environments/dev
         run: terraform init
 
       - name: Terraform Apply
@@ -92,7 +96,9 @@ jobs:
           aws-region: us-east-1
 
       - name: Terraform Init
+        working-directory: environments/dev
         run: terraform init
 
       - name: Terraform Destroy
+        working-directory: environments/dev
         run: terraform destroy -auto-approve
