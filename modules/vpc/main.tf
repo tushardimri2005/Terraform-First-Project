@@ -7,8 +7,8 @@ resource "aws_vpc" "main_vpc" {
 
 resource "aws_subnet" "public_subnet" {
   vpc_id                  = aws_vpc.main_vpc.id
-  cidr_block = var.public_subnet_cidrs
-  availability_zone = var.availability_zone
+  cidr_block              = var.public_subnet_cidrs
+  availability_zone       = var.availability_zone
   map_public_ip_on_launch = true
 
   tags = {
@@ -17,8 +17,8 @@ resource "aws_subnet" "public_subnet" {
 }
 resource "aws_subnet" "private_subnet" {
   vpc_id                  = aws_vpc.main_vpc.id
-  cidr_block = var.private_subnet_cidrs
-  availability_zone = var.availability_zone
+  cidr_block              = var.private_subnet_cidrs
+  availability_zone       = var.availability_zone
   map_public_ip_on_launch = false
 
   tags = {
@@ -27,13 +27,13 @@ resource "aws_subnet" "private_subnet" {
 }
 
 resource "aws_eip" "this" {
-   domain = "vpc"
+  domain = "vpc"
 }
 
 resource "aws_nat_gateway" "this" {
   allocation_id = aws_eip.this.id
-  subnet_id = aws_subnet.public_subnet.id
-  depends_on = [aws_eip.this]
+  subnet_id     = aws_subnet.public_subnet.id
+  depends_on    = [aws_eip.this]
   tags = {
     Name = "Terraform-IGW"
   }

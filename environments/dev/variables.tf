@@ -1,12 +1,12 @@
 
 variable "ami" {
-    type = string
+  type = string
 }
 variable "instance_type" {
-    type = string
+  type = string
 }
-variable "cidr_block_vpc"{
-    type  = string
+variable "cidr_block_vpc" {
+  type = string
 }
 
 variable "public_subnet_cidrs" {
@@ -21,5 +21,5 @@ variable "availability_zone" {
 }
 
 variable "aws_region" {
-   type = string
+  type = string
 }
