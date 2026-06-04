@@ -1,6 +1,7 @@
 resource "aws_instance" "ec2_instance" {
-  ami           = "ami-0c02fb55956c7d316"
-  instance_type = "t3.micro"
+  ami           = var.ami
+  instance_type = var.instance_type
+  subnet_id = var.subnet_id
 
   tags = {
     Name = "Terraform-EC2"
