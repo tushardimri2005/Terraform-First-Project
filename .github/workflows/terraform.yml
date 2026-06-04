@@ -74,6 +74,7 @@ jobs:
         run: terraform init
 
       - name: Terraform Apply
+        working-directory: environments/dev
         run: terraform apply -auto-approve
 
   terraform-destroy:
