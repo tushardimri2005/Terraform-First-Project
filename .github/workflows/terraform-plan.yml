@@ -11,13 +11,11 @@ permissions:
   contents: read
 
 jobs:
-
   terraform-plan:
 
     runs-on: ubuntu-latest
 
     steps:
-
       - name: Checkout Code
         uses: actions/checkout@v4
 
@@ -48,4 +46,4 @@ jobs:
 
       - name: Terraform Plan
         working-directory: environments/dev
-        run: terraform plan -input=false
+        run: terraform plan -input=false -var-file="terraform.tfvars"
