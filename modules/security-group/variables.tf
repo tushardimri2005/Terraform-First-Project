@@ -6,7 +6,11 @@ variable "environment" {
   type = string
 }
 
-variable "bucket_name" {
+variable "vpc_id" {
+  type = string
+}
+
+variable "allowed_ssh_cidr" {
   type = string
 }
 
