@@ -120,9 +120,12 @@ jobs:
         working-directory: environments/dev
         run: terraform init
 
+      - name: Terraform Format Check
+        run: terraform fmt -check -recursive
+
       - name: Terraform Validate
         working-directory: environments/dev
-        run: terraform validate
+        run: terraform validate -no-color
 
       - name: Terraform Plan
         working-directory: environments/dev
