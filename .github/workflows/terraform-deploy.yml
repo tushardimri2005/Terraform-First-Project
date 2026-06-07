@@ -4,6 +4,26 @@ on:
   workflow_dispatch:
     inputs:
 
+      aws_region:
+        description: "AWS Region"
+        required: true
+
+      instance_type:
+        description: "EC2 Instance Type"
+        required: true
+
+      vpc_cidr:
+        description: "VPC CIDR"
+        required: true
+
+      public_subnet_cidr:
+        description: "Public Subnet CIDR"
+        required: true
+
+      private_subnet_cidr:
+        description: "Private Subnet CIDR"
+        required: true
+
       action:
         description: "Terraform Action"
         required: true
@@ -18,7 +38,60 @@ permissions:
 
 jobs:
 
+  validate-inputs:
+
+    runs-on: ubuntu-latest
+
+    steps:
+
+      - name: Validate AWS Region
+        run: |
+          REGION="${{ github.event.inputs.aws_region }}"
+
+          case "$REGION" in
+            us-east-1|us-east-2|us-west-1|us-west-2)
+              echo "Valid AWS Region"
+              ;;
+            *)
+              echo "Invalid AWS Region"
+              exit 1
+              ;;
+          esac
+
+      - name: Validate Instance Type
+        run: |
+          INSTANCE="${{ github.event.inputs.instance_type }}"
+
+          case "$INSTANCE" in
+            t2.micro|t3.micro)
+              echo "Valid Instance Type"
+              ;;
+            *)
+              echo "Only approved free-tier instance types are allowed"
+              exit 1
+              ;;
+          esac
+
+      - name: Validate CIDR Format
+        run: |
+          for CIDR in \
+          "${{ github.event.inputs.vpc_cidr }}" \
+          "${{ github.event.inputs.public_subnet_cidr }}" \
+          "${{ github.event.inputs.private_subnet_cidr }}"
+          do
+
+            if [[ ! $CIDR =~ ^([0-9]{1,3}\.){3}[0-9]{1,3}/([0-9]|[1-2][0-9]|3[0-2])$ ]]; then
+              echo "Invalid CIDR Block: $CIDR"
+              exit 1
+            fi
+
+          done
+
+          echo "CIDR Validation Passed"
+
   terraform-deploy:
+
+    needs: validate-inputs
 
     runs-on: ubuntu-latest
 
@@ -38,7 +111,7 @@ jobs:
         uses: aws-actions/configure-aws-credentials@v4
         with:
           role-to-assume: arn:aws:iam::947782089242:role/GitHub_Role
-          aws-region: us-east-1
+          aws-region: ${{ github.event.inputs.aws_region }}
 
       - name: Verify AWS Identity
         run: aws sts get-caller-identity
@@ -53,7 +126,15 @@ jobs:
 
       - name: Terraform Plan
         working-directory: environments/dev
-        run: terraform plan -input=false -var-file="terraform.tfvars"
+        run: |
+          terraform plan \
+          -input=false \
+          -var-file="terraform.tfvars" \
+          -var="aws_region=${{ github.event.inputs.aws_region }}" \
+          -var="instance_type=${{ github.event.inputs.instance_type }}" \
+          -var="vpc_cidr=${{ github.event.inputs.vpc_cidr }}" \
+          -var="public_subnet_cidr=${{ github.event.inputs.public_subnet_cidr }}" \
+          -var="private_subnet_cidr=${{ github.event.inputs.private_subnet_cidr }}"
 
       - name: Terraform Apply
         if: github.event.inputs.action == 'apply'
@@ -62,7 +143,12 @@ jobs:
           terraform apply \
           -auto-approve \
           -input=false \
-          -var-file="terraform.tfvars"
+          -var-file="terraform.tfvars" \
+          -var="aws_region=${{ github.event.inputs.aws_region }}" \
+          -var="instance_type=${{ github.event.inputs.instance_type }}" \
+          -var="vpc_cidr=${{ github.event.inputs.vpc_cidr }}" \
+          -var="public_subnet_cidr=${{ github.event.inputs.public_subnet_cidr }}" \
+          -var="private_subnet_cidr=${{ github.event.inputs.private_subnet_cidr }}"
 
       - name: Terraform Destroy
         if: github.event.inputs.action == 'destroy'
@@ -71,5 +157,9 @@ jobs:
           terraform destroy \
           -auto-approve \
           -input=false \
-          -var-file="terraform.tfvars"
-          #this is a file
+          -var-file="terraform.tfvars" \
+          -var="aws_region=${{ github.event.inputs.aws_region }}" \
+          -var="instance_type=${{ github.event.inputs.instance_type }}" \
+          -var="vpc_cidr=${{ github.event.inputs.vpc_cidr }}" \
+          -var="public_subnet_cidr=${{ github.event.inputs.public_subnet_cidr }}" \
+          -var="private_subnet_cidr=${{ github.event.inputs.private_subnet_cidr }}"
