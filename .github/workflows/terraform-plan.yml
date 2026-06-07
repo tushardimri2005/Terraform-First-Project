@@ -1,0 +1,51 @@
+name: Terraform Plan
+
+on:
+  push:
+    branches:
+      - main
+      - approval-pipeline
+
+permissions:
+  id-token: write
+  contents: read
+
+jobs:
+
+  terraform-plan:
+
+    runs-on: ubuntu-latest
+
+    steps:
+
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: 1.12.2
+
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: arn:aws:iam::947782089242:role/GitHub_Role
+          aws-region: us-east-1
+
+      - name: Verify AWS Identity
+        run: aws sts get-caller-identity
+
+      - name: Terraform Init
+        working-directory: environments/dev
+        run: terraform init
+
+      - name: Terraform Format Check
+        run: terraform fmt -check -recursive
+
+      - name: Terraform Validate
+        working-directory: environments/dev
+        run: terraform validate
+
+      - name: Terraform Plan
+        working-directory: environments/dev
+        run: terraform plan

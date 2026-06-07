@@ -1,16 +1,27 @@
-variable "cidr_block_vpc" {
+variable "project_name" {
   type = string
 }
 
-
-variable "public_subnet_cidrs" {
+variable "environment" {
   type = string
 }
 
-variable "private_subnet_cidrs" {
+variable "vpc_cidr" {
+  type = string
+}
+
+variable "public_subnet_cidr" {
+  type = string
+}
+
+variable "private_subnet_cidr" {
   type = string
 }
 
 variable "availability_zone" {
   type = string
+}
+
+variable "common_tags" {
+  type = map(string)
 }
