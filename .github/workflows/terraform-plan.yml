@@ -48,4 +48,4 @@ jobs:
 
       - name: Terraform Plan
         working-directory: environments/dev
-        run: terraform plan
+        run: terraform plan -input=false
