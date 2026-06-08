@@ -13,3 +13,4 @@ output "public_subnet_id" {
 output "private_subnet_id" {
   value = module.vpc.private_subnet_id
 }
+#This is the output file
